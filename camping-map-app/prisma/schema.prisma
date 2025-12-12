@@ -1,0 +1,62 @@
+generator client {
+  // Won't work until Neon is initialized
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  // Won't work until Neon is initialized
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username String   @unique
+  email    String   @unique
+  lists    List[]
+  reviews  Review[]
+}
+
+model List {
+  id       Int     @id @default(autoincrement())
+  userId   Int     @unique
+  user     User    @relation(fields: [userId], references: [id])
+  title    String
+  imageUrl String?
+  sites    Site[]
+}
+
+model Site {
+  id           Int      @id @default(autoincrement())
+  title        String
+  address      String
+  price        Int?
+  accessRoad   String?
+  activities   String[]
+  lastReviewed String?
+  type         Type?
+  location     String
+
+  lists   List[]
+  reviews Review[]
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  tags      String[]
+  postedOn  String
+  message   String
+  imageUrls String[]
+  likeCount Int
+
+  siteId Int
+  site   Site @relation(fields: [siteId], references: [id])
+}
+
+enum Type {
+  federalStreet
+  campsite
+}
