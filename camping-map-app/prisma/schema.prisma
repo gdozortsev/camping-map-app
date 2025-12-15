@@ -7,7 +7,6 @@ generator client {
 datasource db {
   // Won't work until Neon is initialized
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
